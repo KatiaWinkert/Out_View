@@ -1,22 +1,23 @@
-const mongoose = require("mongoose")
+const mongoose = require('mongoose')
 
-//connection - conexão: 
+//connection - conexão:
 
-const dbUser = ""
-const dbPassword = ""
+const dbUser = process.env.DB_USER
+const dbPassword = process.env.DB_PASS
 
 const conn = async () => {
-    try {
-        
-        const dbConn = await mongoose.connect(
-          `mongodb+srv://katiaW:<password>@cluster0.oxktkis.mongodb.net/?retryWrites=true&w=majority`
-        )
-        console.log("Conectou com o banco!")
+  try {
+    const dbConn = await mongoose.connect(
+      `mongodb+srv://${dbUser}:${dbPassword}@cluster0.oxktkis.mongodb.net/?retryWrites=true&w=majority`
+    )
+    console.log('Conectou com o banco!')
 
-        return dbConn
-
-    } catch (error) {
-        
-    }
-
+    return dbConn
+  } catch (error) {
+    console.log(error)
+  }
 }
+
+conn()
+
+module.exports = conn
