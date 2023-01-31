@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken")
 const jwtSecret = process.env.JWT_SECRET;
 
 
-//Gerando o token do usuario 
+//Gerando o token do usuario (função auxiliar que ajuda gerar o token)
 const generateToken = (id) =>{
     return jwt.sign({id}, jwtSecret, {
         expiresIn: "7d",
