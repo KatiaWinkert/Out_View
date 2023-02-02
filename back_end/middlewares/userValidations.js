@@ -30,6 +30,19 @@ const userCreateValidation = () => {
   ]
 }
 
+//Autenticação de login = validação de login
+const loginValidation = () => {
+  return [
+    body('email')
+      .isString()
+      .withMessage('E-mail é obrigatório.')
+      .isEmail()
+      .withMessage('Insira um e-mail valido!'),
+    body('password').isString().withMessage('A senha é obrigatória!'),
+  ]
+}
+
 module.exports = {
   userCreateValidation,
+  loginValidation,
 }
