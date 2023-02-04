@@ -50,6 +50,13 @@ const register = async (req, res) => {
   })
 }
 
+// Get current logged in user - Resgatando usuario autenticado 
+const getCurrentUser = async (req, res ) => {
+  const user = req.user 
+
+  res.status(200).json(user)
+}
+
 //Sing user in - concluindo o login 
 const login = async (req, res) => {
 
@@ -81,7 +88,10 @@ const login = async (req, res) => {
   })
 }
 
+
+
 module.exports = {
   register,
   login,
+  getCurrentUser
 }
