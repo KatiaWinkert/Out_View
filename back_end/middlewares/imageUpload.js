@@ -1,8 +1,8 @@
-const multer = require('milter') // responsavel por upload de arquivos
+const multer = require('multer') // responsavel por upload de arquivos
 const path = require('path') // modulo padrão do node. responsavel pelos metodos e diretorios que estamos trabalhando na aplicação
 
 // função: destino da imagem salva - destination to store image
-const imageStore = multer.diskStorege({
+const imageStore = multer({
   //mudança de destino padrão
   destination: (req, file, cb) => {
     let folder = ''
