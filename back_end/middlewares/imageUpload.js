@@ -1,9 +1,8 @@
-const multer = require('multer') // responsavel por upload de arquivos
-const path = require('path') // modulo padrão do node. responsavel pelos metodos e diretorios que estamos trabalhando na aplicação
+const multer = require('multer')
+const path = require('path')
 
-// função: destino da imagem salva - destination to store image
-const imageStore = multer({
-  //mudança de destino padrão
+// Destination to store image
+const imageStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     let folder = ''
 
@@ -14,19 +13,16 @@ const imageStore = multer({
     }
     cb(null, `uploads/${folder}/`)
   },
-  //mudançã de arquivo padrão:
   filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)) // 784e4564546sa54564.jpg
+    cb(null, Date.now() + path.extname(file.originalname))
   },
 })
 
-//faz uma pequena validação e define onde a imagem vai ser salva.
 const imageUpload = multer({
-  Storage: imageStore,
+  storage: imageStorage,
   fileFilter(req, file, cb) {
     if (!file.originalname.match(/\.(png|jpg)$/)) {
-      // upload only png and jpg formats
-
+      // upload only png and jpg format
       return cb(new Error('Por favor, envie apenas png ou jpg!'))
     }
     cb(undefined, true)
