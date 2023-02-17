@@ -1,6 +1,6 @@
 const { body } = require('express-validator')
 
-const photoValidation = () => {
+const photoInsertValidation = () => {
   return [
     body('title')
       .not()
@@ -20,5 +20,5 @@ const photoValidation = () => {
 }
 
 module.exports = {
-    photoValidation,
+  photoInsertValidation,
 }
