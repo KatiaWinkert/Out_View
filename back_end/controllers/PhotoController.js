@@ -66,7 +66,17 @@ const deletePhoto = async (req, res) => {
   }
 }
 
+//Get all photos - Resgatado fotos:
+const getAllPhotos = async (req, res) => {
+  const photos = await Photo.find({})
+    .sort([['createAd', -1]])
+    .exec()
+
+  return res.status(200).json(photos)
+}
+
 module.exports = {
   insertPhoto,
   deletePhoto,
+  getAllPhotos,
 }
