@@ -39,7 +39,7 @@ const deletePhoto = async (req, res) => {
 
   const reqUser = req.user
   try {
-    const photo = Photo.findById(mongoose.Types.ObjectId(id))
+    const photo = await Photo.findById(mongoose.Types.ObjectId(id))
 
     //check if photo exist
     if (!photo) {
@@ -61,9 +61,7 @@ const deletePhoto = async (req, res) => {
       .status(200)
       .json({ id: photo._id, message: 'Foto excluida com sucesso!' })
   } catch (error) {
-    res
-      .status(404)
-      .json({ id: photo._id, message: 'Foto excluida com sucesso!' })
+    res.status(404).json({ errors: 'Foto excluida com sucesso!' })
     return
   }
 }
