@@ -18,9 +18,9 @@ const register = async (req, res) => {
   const { name, email, password } = req.body
 
   //checando se o usuario existe:
-  const user = await User.findOne({email})
+  const user = await User.findOne({ email })
 
-  if (user) {
+  if (!user) {
     res.status(422).json({ errors: ['Por favor, utilize outro e-mail'] })
     return
   }
