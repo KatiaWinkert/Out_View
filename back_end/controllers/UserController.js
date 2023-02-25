@@ -18,10 +18,10 @@ const register = async (req, res) => {
   const { name, email, password } = req.body
 
   //checando se o usuario existe:
-  const user = await User.findOne({ email })
+  const user = await User.findOne({email})
 
   if (user) {
-    res.status(422).json({ errors: ['Esse email já esta cadastrado!'] })
+    res.status(422).json({ errors: ['Por favor, utilize outro e-mail'] })
     return
   }
 
@@ -79,7 +79,7 @@ const login = async (req, res) => {
 
   //Retornando o usuario com o Token - Return user with token (vou retornar tambem a imagem de perfil do usuario) nesse
   //codiogo eu posso retornar outros dados tb
-  res.status(201).json({
+  res.status(200).json({
     _id: user._id,
     profileImage: user.profileImage,
     token: generateToken(user._id),
@@ -129,19 +129,18 @@ const update = async (req, res) => {
 const getUserByID = async (req, res) => {
   const { id } = req.params
 
-  try {
-    const user = await User.findById(mongoose.Types.ObjectId(id)).select(
-      '-password'
-    )
-    //checando se o usuario existe - check if user exists
-    if (!user) {
-      res.status(404).json({ error: ['Usuario não encontrado!'] })
-      return
-    }
+  const user = await User.findById(mongoose.Types.ObjectId(id)).select(
+    '-password'
+  )
+  //checando se o usuario existe - check if user exists
+  if (!user) {
+    res.status(404).json({ errors: ['Usuario não encontrado!'] })
+    return
+  }
 
-    res.status(200).json(user)
-  } catch (error) {
-    res.status(404).json({ error: ['Usuario não encontrado!'] })
+  res.status(200).json(user)
+  {
+    res.status(404).json({ errors: ['Usuario não encontrado!'] })
     return
   }
 }
