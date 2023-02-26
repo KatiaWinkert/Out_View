@@ -10,12 +10,14 @@ const {
   getPhotoById,
   updatePhoto,
   likePhoto,
+  commentPhoto,
 } = require('../controllers/PhotoController')
 
 //Middlewares
 const {
   photoInsertValidation,
   photoUpdateValidation,
+  commentValidation,
 } = require('../middlewares/photoValidation')
 const authGuard = require('../middlewares/authGuard')
 const validate = require('../middlewares/handleValidaition')
@@ -43,5 +45,12 @@ router.put(
   updatePhoto
 )
 router.put('/like/:id', authGuard, likePhoto)
+router.put(
+  '/comment/:id',
+  authGuard,
+  commentValidation(),
+  validate,
+  commentPhoto
+)
 
 module.exports = router
