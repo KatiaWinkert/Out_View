@@ -101,7 +101,7 @@ const getPhotoById = async (req, res) => {
 
   res.status(200).json(photo)
 }
-
+//
 module.exports = {
   insertPhoto,
   deletePhoto,
