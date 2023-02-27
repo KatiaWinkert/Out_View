@@ -10,7 +10,7 @@ const Register = () => {
   }
 
   return (
-    <div>
+    <div id='register'>
       <h2>Out View</h2>
       <p className="subtitle">Criar uma conta</p>
       <form onSubmit={handleSubmit}>
@@ -21,7 +21,7 @@ const Register = () => {
         <input type="submit" value="Cadastrar" />
       </form>
       <p>
-        Já tem cadastrado? <Link to="/login">Clique aqui!</Link>
+        Já tem cadastro? <Link to="/login">Clique aqui!</Link>
       </p>
     </div>
   )
