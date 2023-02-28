@@ -11,8 +11,10 @@ import {
 const Navbar = () => {
   return (
     <nav id="nav">
-      <Link to="/">Out View</Link>
-      <form id='search-form'>
+      <Link to="/">
+        <h2>Out View</h2>
+      </Link>
+      <form id="search-form">
         <BsSearch />
         <input type="text" placeholder="Pesquisar" />
       </form>
