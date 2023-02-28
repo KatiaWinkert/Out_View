@@ -4,8 +4,8 @@ const router = express.Router()
 // Controller
 const {
   register,
-  login,
   getCurrentUser,
+  login,
   update,
   getUserByID,
 } = require('../controllers/UserController')
@@ -22,8 +22,8 @@ const { imageUpload } = require('../middlewares/imageUpload')
 
 // Routes
 router.post('/register', userCreateValidation(), validate, register)
-router.post('/login', loginValidation(), validate, login)
 router.get('/profile', authGuard, getCurrentUser)
+router.post('/login', loginValidation(), validate, login)
 router.put(
   '/',
   authGuard,
