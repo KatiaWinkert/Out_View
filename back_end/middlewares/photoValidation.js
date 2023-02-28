@@ -21,6 +21,14 @@ const photoInsertValidation = () => {
 
 const photoUpdateValidation = () => {
   return [
+    body('image')
+      .optional()
+      .custom((value, { req }) => {
+        if (!req.file) {
+          throw new Error('A imagem é obrigatória')
+        }
+        return true
+      }),
     body('title')
       .optional()
       .isString()
