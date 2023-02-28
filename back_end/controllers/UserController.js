@@ -20,7 +20,7 @@ const register = async (req, res) => {
   //checando se o usuario existe:
   const user = await User.findOne({ email })
 
-  if (!user) {
+  if (user) {
     res.status(422).json({ errors: ['Por favor, utilize outro e-mail'] })
     return
   }
@@ -139,10 +139,6 @@ const getUserByID = async (req, res) => {
   }
 
   res.status(200).json(user)
-  {
-    res.status(404).json({ errors: ['Usuario não encontrado!'] })
-    return
-  }
 }
 
 module.exports = {
