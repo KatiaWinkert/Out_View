@@ -1,5 +1,4 @@
 //função de validação que será utilizada nas rotas
-
 const { validationResult } = require('express-validator')
 
 const validate = (req, res, next) => {
