@@ -1,5 +1,5 @@
 const Photo = require('../models/Photo')
-const User = require('../models/User')
+
 const mongoose = require('mongoose')
 
 //inserir foto, com usuario relacionado a ela. - insert a photo, whit an user related to it
@@ -14,6 +14,8 @@ const insertPhoto = async (req, res) => {
 
   const user = await User.findById(reqUser._id)
 
+  console.log(user.name)
+
   //create a phot
 
   const newPhoto = await Photo.create({
@@ -26,7 +28,7 @@ const insertPhoto = async (req, res) => {
   //ver se foto foi criada com sucesso- if photo was created sucessfully, return date:
   if (!newPhoto) {
     res.status(422).json({
-      errors: ['Houve uma falha, por favor tente mais tarde!'],
+      errors: ['Houve uma erro, por favor tente mais tarde!'],
     })
     return
   }
@@ -38,32 +40,26 @@ const deletePhoto = async (req, res) => {
   const { id } = req.params
 
   const reqUser = req.user
-  try {
-    const photo = await Photo.findById(mongoose.Types.ObjectId(id))
 
-    //check if photo exist
-    if (!photo) {
-      res.status(404).json({ errors: ['Foto não encontrada'] })
-      return
-    }
+  const photo = await Photo.findById(mongoose.Types.ObjectId(id))
 
-    //check photo belongs to user - checar se a foto pertence ao usuario
-    if (!photo.userId.equals(reqUser._id)) {
-      res.status(422).json({
-        errors: ['Ocorreu um erro, por favor tente novamente mais tarde!'],
-      })
-      return
-    }
-
-    await Photo.findByIdAndDelete(photo._id)
-
-    res
-      .status(200)
-      .json({ id: photo._id, message: 'Foto excluida com sucesso!' })
-  } catch (error) {
-    res.status(404).json({ errors: 'Foto excluida com sucesso!' })
+  //check if photo exist
+  if (!photo) {
+    res.status(404).json({ errors: ['Foto não encontrada'] })
     return
   }
+
+  //check photo belongs to user - checar se a foto pertence ao usuario
+  if (!photo.userId.equals(reqUser._id)) {
+    res.status(422).json({
+      errors: ['Ocorreu um erro, por favor tente novamente mais tarde!'],
+    })
+    return
+  }
+
+  await Photo.findByIdAndDelete(photo._id)
+
+  res.status(200).json({ id: photo._id, message: 'Foto excluida com sucesso!' })
 }
 
 //Get all photos - Resgatado fotos:
@@ -107,6 +103,12 @@ const updatePhoto = async (req, res) => {
   const { id } = req.params
   const { title } = req.body
 
+  let image
+
+  if (req.file) {
+    image = req.file.filename
+  }
+
   const reqUser = req.user
 
   const photo = await Photo.findById(id)
@@ -127,6 +129,11 @@ const updatePhoto = async (req, res) => {
   if (title) {
     photo.title = title
   }
+
+  if (image) {
+    photo.image = image
+  }
+
   await photo.save()
 
   res.status(200).json({ photo, message: 'Foto atualizada com sucesso!' })
@@ -136,6 +143,7 @@ const updatePhoto = async (req, res) => {
 
 const likePhoto = async (req, res) => {
   const { id } = req.params
+
   const reqUser = req.user
 
   const photo = await Photo.findById(id)
@@ -154,7 +162,7 @@ const likePhoto = async (req, res) => {
   //put user id in likes array: colocar id do usuario com likes array:
   photo.likes.push(reqUser._id)
 
-  photo.save()
+  await photo.save()
 
   res
     .status(200)
