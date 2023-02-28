@@ -15,13 +15,13 @@ const {
 } = require('../controllers/PhotoController')
 
 //Middlewares
+const authGuard = require('../middlewares/authGuard')
+const validate = require('../middlewares/handleValidaition')
 const {
   photoInsertValidation,
   photoUpdateValidation,
   commentValidation,
 } = require('../middlewares/photoValidation')
-const authGuard = require('../middlewares/authGuard')
-const validate = require('../middlewares/handleValidaition')
 const { imageUpload } = require('../middlewares/imageUpload')
 
 //Routes
