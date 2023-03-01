@@ -1,5 +1,7 @@
 //Router - Rotas
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+//hooks
+import { useAuth } from './hooks/useAuth'
 //css
 import './App.css'
 //pages
@@ -11,15 +13,30 @@ import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 
 function App() {
+  const { auth, loading } = useAuth()
+
+  if (loading) {
+    return <p>Carregando...</p>
+  }
+
   return (
     <div className="App">
       <BrowserRouter>
         <Navbar />
         <div className="container">
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+            <Route
+              path="/"
+              element={auth ? <Home /> : <Navigate to="/login" />}
+            />
+            <Route
+              path="/login"
+              element={!auth ? <Login /> : <Navigate to="/" />}
+            />
+            <Route
+              path="/register"
+              element={!auth ? <Register /> : <Navigate to="/" />}
+            />
           </Routes>
         </div>
         <Footer />
