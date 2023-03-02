@@ -133,7 +133,7 @@ const getUserByID = async (req, res) => {
     '-password'
   )
   //checando se o usuario existe - check if user exists
-  if (!user) {
+  if (user) {
     res.status(404).json({ errors: ['Usuario não encontrado!'] })
     return
   }
