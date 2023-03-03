@@ -17,30 +17,31 @@ const generateToken = (id) => {
 const register = async (req, res) => {
   const { name, email, password } = req.body
 
-  // check if user exists
+  //checando se o usuario existe:
   const user = await User.findOne({ email })
 
-  if (user) {
-    res.status(422).json({ errors: ['Por favor, utilize outro e-mail.'] })
+  if (!user) {
+    res.status(422).json({ errors: ['Por favor, utilize outro e-mail'] })
     return
   }
 
-  // Generate password hash
+  // Generate password hash  gerando senha string aleatoria para que ninguem acesse os dados de forma indevida
+  // o proprio sistema gera através desses codigos:
   const salt = await bcrypt.genSalt()
   const passwordHash = await bcrypt.hash(password, salt)
 
-  // Create user
+  //Criar usuario = Create user
   const newUser = await User.create({
     name,
     email,
     password: passwordHash,
   })
 
-  // If user was created sucessfully, return the token
+  //chegando usuario foi criado com sucesso, retorna o token : if user was create sucessfully, return the token:
   if (!newUser) {
-    res.status(422).json({
-      errors: ['Houve um erro, por favor tente novamente mais tarde.'],
-    })
+    res
+      .status(422)
+      .json({ errors: ['Houve um erro, por favor tente mais tarde!'] })
     return
   }
 
@@ -50,32 +51,34 @@ const register = async (req, res) => {
   })
 }
 
-// Get logged in user
+// Get current logged in user - Resgatando usuario autenticado
 const getCurrentUser = async (req, res) => {
   const user = req.user
 
   res.status(200).json(user)
 }
 
-// Sign user in
+//Sing user in - concluindo o login
 const login = async (req, res) => {
   const { email, password } = req.body
 
   const user = await User.findOne({ email })
 
-  // Check if user exists
+  // para checar se usuario existe - check if user exists
   if (!user) {
-    res.status(404).json({ errors: ['Usuário não encontrado!'] })
+    res.status(404).json({ errors: ['Usuario Não encontrado!'] })
     return
   }
 
-  // Check if password matches
+  //Chacando se a senha são iguais = check if password matches
+
   if (!(await bcrypt.compare(password, user.password))) {
-    res.status(422).json({ errors: ['Senha inválida!'] })
+    res.status(422).json({ errors: ['Senha invalida.'] })
     return
   }
 
-  // Return user with token
+  //Retornando o usuario com o Token - Return user with token (vou retornar tambem a imagem de perfil do usuario) nesse
+  //codiogo eu posso retornar outros dados tb
   res.status(200).json({
     _id: user._id,
     profileImage: user.profileImage,
@@ -83,7 +86,7 @@ const login = async (req, res) => {
   })
 }
 
-// Update user
+//update en user
 const update = async (req, res) => {
   const { name, password, bio } = req.body
 
@@ -92,7 +95,6 @@ const update = async (req, res) => {
   if (req.file) {
     profileImage = req.file.filename
   }
-
   const reqUser = req.user
 
   const user = await User.findById(mongoose.Types.ObjectId(reqUser._id)).select(
@@ -106,6 +108,7 @@ const update = async (req, res) => {
   if (password) {
     const salt = await bcrypt.genSalt()
     const passwordHash = await bcrypt.hash(password, salt)
+
     user.password = passwordHash
   }
 
@@ -122,17 +125,16 @@ const update = async (req, res) => {
   res.status(200).json(user)
 }
 
-// Get user by id
-const getUserById = async (req, res) => {
+//Resgatando usuario pelo id - Get user by Id
+const getUserByID = async (req, res) => {
   const { id } = req.params
 
   const user = await User.findById(mongoose.Types.ObjectId(id)).select(
     '-password'
   )
-
-  // Check if user exists
+  //checando se o usuario existe - check if user exists
   if (!user) {
-    res.status(404).json({ errors: ['Usuário não encontrado!'] })
+    res.status(404).json({ errors: ['Usuario não encontrado!'] })
     return
   }
 
@@ -141,8 +143,8 @@ const getUserById = async (req, res) => {
 
 module.exports = {
   register,
-  getCurrentUser,
   login,
+  getCurrentUser,
   update,
-  getUserById,
+  getUserByID,
 }
