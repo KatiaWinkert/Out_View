@@ -32,7 +32,7 @@ const Login = () => {
   // clean all auth state: 
   useEffect(() =>{
     dispatch(reset())
-  }, dispatch) 
+  }, [dispatch]) 
 
   return (
     <div id="login">
