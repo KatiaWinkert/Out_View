@@ -2,47 +2,41 @@ const User = require('../models/User')
 
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const { default: mongoose } = require('mongoose')
+const mongoose = require('mongoose')
 
 const jwtSecret = process.env.JWT_SECRET
 
-// Generate user token
 const generateToken = (id) => {
-  return jwt.sign({ id }, jwtSecret, {
-    expiresIn: '7d',
-  })
+  return jwt.sign({ id }, jwtSecret, { expiresIn: '7d' })
 }
 
-// Register user and sign in
 const register = async (req, res) => {
   const { name, email, password } = req.body
 
-  //checando se o usuario existe:
   const user = await User.findOne({ email })
 
-  if (!user) {
-    res.status(422).json({ errors: ['Por favor, utilize outro e-mail'] })
+  // If user was created successfully, return the token
+  if (user) {
+    res.status(422).json({ errors: ['Por favor, utilize outro e-mail.'] })
     return
   }
 
-  // Generate password hash  gerando senha string aleatoria para que ninguem acesse os dados de forma indevida
-  // o proprio sistema gera através desses codigos:
+  // Generate password hash
   const salt = await bcrypt.genSalt()
   const passwordHash = await bcrypt.hash(password, salt)
 
-  //Criar usuario = Create user
+  // Create user
   const newUser = await User.create({
     name,
     email,
     password: passwordHash,
   })
 
-  //chegando usuario foi criado com sucesso, retorna o token : if user was create sucessfully, return the token:
+  // If user was created successfully, return the token
   if (!newUser) {
     res
       .status(422)
-      .json({ errors: ['Houve um erro, por favor tente mais tarde!'] })
-    return
+      .json({ errors: ['Houve um erro, por favor tente mais tarde.'] })
   }
 
   res.status(201).json({
@@ -51,42 +45,40 @@ const register = async (req, res) => {
   })
 }
 
-// Get current logged in user - Resgatando usuario autenticado
-const getCurrentUser = async (req, res) => {
-  const user = req.user
-
-  res.status(200).json(user)
-}
-
-//Sing user in - concluindo o login
+// Sign user in
 const login = async (req, res) => {
   const { email, password } = req.body
 
   const user = await User.findOne({ email })
 
-  // para checar se usuario existe - check if user exists
+  // Check if user exists
   if (!user) {
-    res.status(404).json({ errors: ['Usuario Não encontrado!'] })
+    res.status(404).json({ errors: ['Usuário não encontrado.'] })
     return
   }
 
-  //Chacando se a senha são iguais = check if password matches
-
+  // Check if password matches
   if (!(await bcrypt.compare(password, user.password))) {
-    res.status(422).json({ errors: ['Senha invalida.'] })
+    res.status(422).json({ errors: ['Senha inválida.'] })
     return
   }
 
-  //Retornando o usuario com o Token - Return user with token (vou retornar tambem a imagem de perfil do usuario) nesse
-  //codiogo eu posso retornar outros dados tb
-  res.status(200).json({
+  // Return user with token
+  res.status(201).json({
     _id: user._id,
     profileImage: user.profileImage,
     token: generateToken(user._id),
   })
 }
 
-//update en user
+// Get current logged in user
+const getCurrentUser = async (req, res) => {
+  const user = req.user
+
+  res.status(200).json(user)
+}
+
+// Update an user
 const update = async (req, res) => {
   const { name, password, bio } = req.body
 
@@ -95,6 +87,7 @@ const update = async (req, res) => {
   if (req.file) {
     profileImage = req.file.filename
   }
+
   const reqUser = req.user
 
   const user = await User.findById(mongoose.Types.ObjectId(reqUser._id)).select(
@@ -106,6 +99,7 @@ const update = async (req, res) => {
   }
 
   if (password) {
+    // Generate password hash
     const salt = await bcrypt.genSalt()
     const passwordHash = await bcrypt.hash(password, salt)
 
@@ -125,20 +119,25 @@ const update = async (req, res) => {
   res.status(200).json(user)
 }
 
-//Resgatando usuario pelo id - Get user by Id
-const getUserByID = async (req, res) => {
+// Get user by id
+const getUserById = async (req, res) => {
   const { id } = req.params
 
-  const user = await User.findById(mongoose.Types.ObjectId(id)).select(
-    '-password'
-  )
-  //checando se o usuario existe - check if user exists
-  if (!user) {
-    res.status(404).json({ errors: ['Usuario não encontrado!'] })
-    return
-  }
+  try {
+    const user = await User.findById(mongoose.Types.ObjectId(id)).select(
+      '-password'
+    )
 
-  res.status(200).json(user)
+    // Check if user exists
+    if (!user) {
+      res.send(404).json({ errors: ['Usuário não encontrado.'] })
+      return
+    }
+
+    res.status(200).json(user)
+  } catch (error) {
+    return res.status(404).json({ errors: ['Usuário não encontrado.'] })
+  }
 }
 
 module.exports = {
@@ -146,5 +145,5 @@ module.exports = {
   login,
   getCurrentUser,
   update,
-  getUserByID,
+  getUserById,
 }
