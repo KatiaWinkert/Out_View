@@ -1,4 +1,5 @@
 const Photo = require('../models/Photo')
+const User = require('../models/User')
 
 const mongoose = require('mongoose')
 
@@ -13,8 +14,6 @@ const insertPhoto = async (req, res) => {
   const reqUser = req.user
 
   const user = await User.findById(reqUser._id)
-
-  console.log(user.name)
 
   //create a phot
 
@@ -37,29 +36,35 @@ const insertPhoto = async (req, res) => {
 
 // Removwndo a foto do db = remove a phot from db
 const deletePhoto = async (req, res) => {
-  const { id } = req.params
+  try {
+    const { id } = req.params
 
-  const reqUser = req.user
+    const reqUser = req.user
 
-  const photo = await Photo.findById(mongoose.Types.ObjectId(id))
+    const photo = await Photo.findById(mongoose.Types.ObjectId(id))
 
-  //check if photo exist
-  if (!photo) {
-    res.status(404).json({ errors: ['Foto não encontrada'] })
+    // Check if photo exists
+    if (!photo) {
+      res.status(404).json({ errors: ['Foto não encontrada! '] })
+      return
+    }
+
+    // Check if photo belongs to user
+    if (!photo.userId.equals(reqUser._id)) {
+      res.status(422).json({
+        errors: ['Ocorreu um erro, por favor tente novamente mais tarde.'],
+      })
+    }
+
+    await Photo.findByIdAndDelete(photo._id)
+
+    res
+      .status(200)
+      .json({ id: photo._id, message: 'Foto excluída com sucesso.' })
+  } catch (error) {
+    res.status(404).json({ errors: ['Foto não encontrada! '] })
     return
   }
-
-  //check photo belongs to user - checar se a foto pertence ao usuario
-  if (!photo.userId.equals(reqUser._id)) {
-    res.status(422).json({
-      errors: ['Ocorreu um erro, por favor tente novamente mais tarde!'],
-    })
-    return
-  }
-
-  await Photo.findByIdAndDelete(photo._id)
-
-  res.status(200).json({ id: photo._id, message: 'Foto excluida com sucesso!' })
 }
 
 //Get all photos - Resgatado fotos:
