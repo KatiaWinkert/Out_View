@@ -5,17 +5,17 @@ const userCreateValidation = () => {
   return [
     body('name')
       .isString()
-      .withMessage('O nome é obrigatório!')
+      .withMessage('O nome é obrigatório.')
       .isLength({ min: 3 })
       .withMessage('O nome precisa ter no mínino 3 caracteres.'),
     body('email')
       .isString()
-      .withMessage('O e-mail é obrigatório!')
+      .withMessage('O e-mail é obrigatório.')
       .isEmail()
       .withMessage('Insira um email valido.'),
     body('password')
       .isString()
-      .withMessage('A senha é obrigatoria!')
+      .withMessage('A senha é obrigatoria.')
       .isLength({ min: 5 })
       .withMessage('A senha precisa ter no mínino 5 caracteres.'),
     body('confirmPassword')
