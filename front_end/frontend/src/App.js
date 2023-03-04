@@ -5,12 +5,12 @@ import { useAuth } from './hooks/useAuth'
 //css
 import './App.css'
 //pages
-import { Home } from './pages/Home/Home'
-import {Login} from './pages/Auth/Login'
-import {Register} from './pages/Auth/Register'
+import  Home from './pages/Home/Home'
+import Login from './pages/Auth/Login'
+import Register from './pages/Auth/Register'
 //components
-import {Navbar} from './components/Navbar'
-import {Footer} from './components/Footer'
+import Navbar from './components/Navbar'
+import Footer from './components/Footer'
 
 function App() {
   const { auth, loading } = useAuth()
