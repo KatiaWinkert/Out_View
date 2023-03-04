@@ -11,7 +11,6 @@ const validate = (req, res, next) => {
 
   // agora de ele não esta vazio ele tem erro (erros extratidos da requisição)
   const extractedErrors = []
-
   errors.array().map((err) => extractedErrors.push(err.msg))
 
   return res.status(422).json({
