@@ -3,7 +3,7 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  background-color: #121212;
+  background-color: #000000;
   color: #fafafa;
 }
 
@@ -72,7 +72,7 @@ input[type='submit'] {
 
 input:disabled {
   cursor: not-allowed;
-  background-color: #000;
+  background-color: #000000;
 }
 
 button:hover,
