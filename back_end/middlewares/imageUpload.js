@@ -11,21 +11,21 @@ const imageStorage = multer.diskStorage({
     } else if (req.baseUrl.includes('photos')) {
       folder = 'photos'
     }
-    cb(null, `uploads/${folder}/`)
+    callback(null, `uploads/${folder}/`)
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname))
+    callback(null, Date.now() + path.extname(file.originalname))
   },
 })
 
 const imageUpload = multer({
   storage: imageStorage,
   fileFilter(req, file, cb) {
-    if (!file.originalname.match(/\.(png|jpg)$/)) {
+    if (!file.originalname.match(/\.(png|jpg|jpeg)$/)) {
       // upload only png and jpg format
-      return cb(new Error('Por favor, envie apenas png ou jpg!'))
+      return callback(new Error('Por favor, envie apenas png, jpg ou jpeg!'))
     }
-    cb(undefined, true)
+    callback(undefined, true)
   },
 })
 
