@@ -43,20 +43,20 @@ const Login = () => {
           type="text"
           placeholder="E-mail"
           onChange={(e) => setEmail(e.target.value)}
-          value={email || ''}
+          value={email}
         />
         <input
           type="password"
           placeholder="Senha"
           onChange={(e) => setPassword(e.target.value)}
-          value={password || ''}
+          value={password}
         />
         {!loading && <input type="submit" value="Entrar" />}
-        {loading && <input type="submit" value="Aguarde..." disabled />}
+        {loading && <input type="submit" disabled value="Aguarde..." />}
         {error && <Message msg={error} type="error" />}
       </form>
       <p>
-        Não tem uma conta? <Link to="/register">clique aqui.</Link>
+        Não tem uma conta? <Link to="/register">Clique aqui.</Link>
       </p>
     </div>
   )
