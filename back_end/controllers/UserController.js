@@ -16,7 +16,7 @@ const register = async (req, res) => {
   const user = await User.findOne({ email })
 
   // If user was created successfully, return the token
-  if (user) {
+  if (!user) {
     res.status(422).json({ errors: ['Por favor, utilize outro e-mail.'] })
     return
   }
@@ -45,6 +45,13 @@ const register = async (req, res) => {
   })
 }
 
+// Get current logged in user
+const getCurrentUser = async (req, res) => {
+  const user = req.user
+
+  res.status(200).json(user)
+}
+
 // Sign user in
 const login = async (req, res) => {
   const { email, password } = req.body
@@ -53,7 +60,7 @@ const login = async (req, res) => {
 
   // Check if user exists
   if (!user) {
-    res.status(404).json({ errors: ['Usuário não encontrado.'] })
+    res.status(404).json({ errors: ['Usuário não encontrado!'] })
     return
   }
 
@@ -64,18 +71,11 @@ const login = async (req, res) => {
   }
 
   // Return user with token
-  res.status(201).json({
+  res.status(200).json({
     _id: user._id,
     profileImage: user.profileImage,
     token: generateToken(user._id),
   })
-}
-
-// Get current logged in user
-const getCurrentUser = async (req, res) => {
-  const user = req.user
-
-  res.status(200).json(user)
 }
 
 // Update an user
