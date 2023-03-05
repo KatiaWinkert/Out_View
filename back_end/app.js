@@ -13,13 +13,18 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
 //solve cors
-//app.use(cors({ credentials: true, origin: 'http://localhost:3000' }))
-app.use(cors({origin: "http://localhost:3000", optionsSuccessStatus: 200}))
+app.use(cors({ credentials: true, origin: 'http://localhost:3000' }))
+//app.use(cors({origin: "http://localhost:3000", optionsSuccessStatus: 200}))
 // diretorio de upload de imagens
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')))
 
 //DB connection - conexão com banco de dados:
 require('./config/db.js')
+
+//test router
+app.get('/', (req, res) => {
+  res.send('API working!')
+})
 
 // routers
 const router = require('./routers/Router')
