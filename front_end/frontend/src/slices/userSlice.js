@@ -12,17 +12,31 @@ const initialState = {
 //funções: get user details
 
 export const profile = createAsyncThunk(
-  "user/profile", 
-  async(user, thunkAPI) => {
+  'user/profile',
+  async (user, thunkAPI) => {
+    const token = thunkAPI.getState.auth.user.token
 
-      const token = thunkAPI.getState().auth.user.token
+    const data = await userService.profile(user, token)
 
-      const data = await userService.profile(user, token)
-  
     return data
-    }
-) 
+  }
+)
 
+//atualizar daddos do usuario : update user details
+export const updateProfile = createAsyncThunk(
+  'user/update',
+  async (user, thunkAPI) => {
+    const token = thunkAPI.getState().auth.user.token
+
+    const data = await userService.profile(user, token)
+
+    //check error
+    if (data.error) {
+      return thunkAPI.rejectWithValue(data.errors[0])
+    }
+    return data
+  }
+)
 
 export const userSlice = createSlice({
   name: 'user',
@@ -33,19 +47,34 @@ export const userSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-     builder
-       .addCase(profile.pending, (state) => {
-         state.loading = true
-         state.error = null
-       })
-       .addCase(profile.fulfilled, (state, action) => {
-         state.loading = false
-         state.success = true
-         state.error = null
-         state.user = action.payload
-       })
-      
-  }
+    builder
+      .addCase(profile.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(profile.fulfilled, (state, action) => {
+        state.loading = false
+        state.success = true
+        state.error = null
+        state.user = action.payload
+      })
+      .addCase(updateProfile.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        state.loading = false
+        state.success = true
+        state.error = null
+        state.user = action.payload
+        state.message = 'Usuário atualizando com sucesso!'
+      })
+      .addCase(updateProfile.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload
+        state.user = null
+      })
+  },
 })
 
 export const { resetMessage } = userSlice.actions
