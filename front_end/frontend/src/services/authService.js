@@ -1,7 +1,6 @@
 import { api, requestConfig } from '../utils/config'
 
-//Register an user - Registrar usuario no sistema:
-
+// Register a user
 const register = async (data) => {
   const config = requestConfig('POST', data)
 
@@ -13,13 +12,14 @@ const register = async (data) => {
     if (res) {
       localStorage.setItem('user', JSON.stringify(res))
     }
+
     return res
   } catch (error) {
     console.log(error)
   }
 }
 
-// Sign in an user - Entrar um usuario
+// Logout a user
 const logout = () => {
   localStorage.removeItem('user')
 }
@@ -30,13 +30,10 @@ const login = async (data) => {
 
   try {
     const res = await fetch(api + '/users/login', config)
-    .then((res) =>
-      res.json()
-      .catch((err) => err))
+      .then((res) => res.json())
+      .catch((err) => err)
 
-    
-
-    if (res._id) {
+    if (res) {
       localStorage.setItem('user', JSON.stringify(res))
     }
 
@@ -53,5 +50,3 @@ const authService = {
 }
 
 export default authService
-
-//.then((res) => res.json()).catch((err) => err)
