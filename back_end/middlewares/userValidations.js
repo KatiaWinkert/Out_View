@@ -1,62 +1,62 @@
 //Nesse aquivo teremos validações para registros, login ...
-const { body } = require('express-validator')
+const { body } = require("express-validator");
 
 const userCreateValidation = () => {
   return [
-    body('name')
+    body("name")
       .isString()
-      .withMessage('O nome é obrigatório.')
+      .withMessage("O nome é obrigatório.")
       .isLength({ min: 3 })
-      .withMessage('O nome precisa ter no mínino 3 caracteres.'),
-    body('email')
+      .withMessage("O nome precisa ter no mínimo 3 caracteres."),
+    body("email")
       .isString()
-      .withMessage('O e-mail é obrigatório.')
+      .withMessage("O e-mail é obrigatório.")
       .isEmail()
-      .withMessage('Insira um email valido.'),
-    body('password')
+      .withMessage("Insira um e-mail válido"),
+    body("password")
       .isString()
-      .withMessage('A senha é obrigatoria.')
+      .withMessage("A senha é obrigatória.")
       .isLength({ min: 5 })
-      .withMessage('A senha precisa ter no mínino 5 caracteres.'),
-    body('confirmPassword')
+      .withMessage("A senha precisa de no mínimo 5 caracteres."),
+    body("confirmPassword")
       .isString()
-      .withMessage('A confirmação da senha é obrigatória.')
+      .withMessage("A confirmação de senha é obrigatória.")
       .custom((value, { req }) => {
         if (value != req.body.password) {
-          throw new Error('As senhas precisam ser iguais!')
+          throw new Error("As senhas não são iguais.");
         }
-        return true
+        return true;
       }),
-  ]
-}
+  ];
+};
 
-//Autenticação de login = validação de login
 const loginValidation = () => {
   return [
-    body('email')
+    body("email")
       .isString()
-      .withMessage('E-mail é obrigatório.')
+      .withMessage("O e-mail é obrigatório.")
       .isEmail()
-      .withMessage('Insira um e-mail valido!'),
-    body('password').isString().withMessage('A senha é obrigatória!'),
-  ]
-}
+      .withMessage("Insira um e-mail válido"),
+    body("password").isString().withMessage("A senha é obrigatória."),
+  ];
+};
 
 const userUpdateValidation = () => {
   return [
-    body('name')
+    body("name")
       .optional()
       .isLength({ min: 3 })
-      .withMessage('O nome precisa ter no mínimo 3 caracteres.'),
-    body('password')
+      .withMessage("O nome precisa ter no mínimo 3 caracteres."),
+    body("password")
       .optional()
       .isLength({ min: 5 })
-      .withMessage('A senha precisa ter no mínimo 5 caracteres.'),
-  ]
-}
+      .withMessage("A senha precisa de no mínimo 5 caracteres."),
+  ];
+};
 
 module.exports = {
   userCreateValidation,
   loginValidation,
   userUpdateValidation,
-}
+};
+
