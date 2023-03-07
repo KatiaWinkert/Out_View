@@ -6,52 +6,83 @@ import { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 //redux
-import { profile, resetMessage } from '../../slices/userSlice'
+import { profile, resetMessage, updateProfile } from '../../slices/userSlice'
 
 //components
 import Message from '../../components/Message'
 
-const EditProfile = () => {
-  const dispatch = useDispatch()
+export function EditProfile() {
+  const dispatch = useDispatch();
 
-  const { user, message, error, loading } = useSelector((state) => state.user)
+  const { user, message, error, loading } = useSelector(state => state.user);
 
-  //state
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [profileImage, setImageProfile] = useState('');
+  const [bio, setBio] = useState('');
+  const [previewImage, setPreviewImage] = useState('');
 
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [profileImage, setProfileImage] = useState('')
-  const [bio, setBio] = useState('')
-  const [previewImage, setPreviewImage] = useState('')
-
-  //load user data
+  // Load user data
   useEffect(() => {
-    dispatch(profile())
-  }, [dispatch])
+    dispatch(profile());
+  }, [dispatch]);
 
-  //Fill form with user data
+  // Fill form with user data
   useEffect(() => {
     if (user) {
-      setName(user.name)
-      setEmail(user.email)
-      setBio(user.bio)
+      setName(user.name);
+      setEmail(user.email);
+      setPassword(user.password);
+      setImageProfile(user.profileImage);
+      setBio(user.bio);
     }
-  }, [user])
+  }, [user]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    // Gather user data from states
+    const userData = {
+      name
+    };
+
+    if (profileImage) {
+      userData.profileImage = profileImage;
+    }
+
+    if (bio) {
+      userData.bio = bio;
+    }
+
+    if (password) {
+      userData.password = password;
+    }
+
+    // build form data
+    const formData = new FormData();
+
+    const userFormData = Object.keys(userData).forEach(key => {
+      formData.append(key, userData[key]);
+    });
+
+    formData.append('user', userFormData);
+
+    await dispatch(updateProfile(formData));
+
+    setTimeout(() => {
+      dispatch(resetMessage());
+    }, 2000);
   }
 
-  const handleFile = (e) => {
-    //image preview
+  function handleFile(e) {
+    // image preview
+    const image = e.target.files[0];
 
-    const imagem = e.target.files[0]
+    setPreviewImage(image);
 
-    setPreviewImage(imagem)
-
-    //update image state:
-    setProfileImage(imagem)
+    // update image state
+    setImageProfile(image);
   }
 
   return (
@@ -62,7 +93,7 @@ const EditProfile = () => {
       </p>
       {(user.profileImage || previewImage) && (
         <img
-        className='profile-image'
+          className="profile-image"
           src={
             previewImage
               ? URL.createObjectURL(previewImage)
@@ -71,41 +102,52 @@ const EditProfile = () => {
           alt={user.name}
         />
       )}
-
       <form onSubmit={handleSubmit}>
         <input
           type="text"
           placeholder="Nome"
-          onChange={(e) => setName(e.target.value)}
+          onChange={e => setName(e.target.value)}
           value={name || ''}
         />
-        <input type="email" placeholder="Email" disabled value={email || ''} />
+        <input type="email" placeholder="E-mail" disabled value={email || ''} />
         <label>
-          <span>Imagem do perfil:</span>
-          <input type="file" onChange={handleFile} />
+          <span>Imagem do Perfil:</span>
+          <input type="file" onChange={e => handleFile(e)} />
         </label>
+
         <label>
           <span>Bio:</span>
           <input
             type="text"
             placeholder="Descrição do perfil"
-            onChange={(e) => setBio(e.target.value)}
+            onChange={e => setBio(e.target.value)}
             value={bio || ''}
           />
         </label>
+
         <label>
-          <span>Alterar senha.</span>
+          <span>Quer alterar sua senha ?</span>
           <input
             type="password"
-            placeholder="Digite a nova senha. "
-            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Digite sua nova senha"
+            autoComplete="off"
+            onChange={e => setPassword(e.target.value)}
             value={password || ''}
           />
         </label>
-        <input type="submit" value="Atualizar" />
+        {!loading ? (
+          <input type="submit" value="Atualizar" />
+        ) : (
+          <input type="submit" value="Aguarde..." disabled />
+        )}
+
+        {error && <Message msg={error} type="error" />}
+        {message && <Message msg={message} type="success" />}
       </form>
     </div>
-  )
+  );
 }
+
+
 
 export default EditProfile
