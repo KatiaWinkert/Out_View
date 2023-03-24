@@ -1,25 +1,22 @@
-import {api, requestConfig} from "../utils/config"
+import { api, requestConfig } from '../utils/config'
 
-//Publish an user photo 
-const publishPhoto = async (data, token) => {
+//Publish an user photo
+export const publishPhoto =  async (data, token) => {
+  const config = requestConfig('POST', data, token, true)
 
-    const config = requestConfig("POST", data, token, true)
+  try {
+    const res = await fetch(api + '/photos', config)
+      .then((res) => res.json)
+      .catch((err) => err)
 
-    try {
-        
-        const res = await fetch(api + "/photos" , config)
-        .then((res) => res.json)
-        .catch((err) => err )
-
-
-    } catch (error) {
-        console.log(error)
-    }
-
+    return res
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 const photoService = {
   publishPhoto,
 }
 
-export default photoService 
+export default photoService
