@@ -47,6 +47,12 @@ const Profile = () => {
     setImage(image)
   }
 
+ function resetComponentMessage() {
+   setTimeout(() => {
+     dispatch(resetMessage())
+   }, 2000)
+ }
+
   const submitHandle = (e) => {
     e.preventDefault()
 
@@ -54,6 +60,8 @@ const Profile = () => {
       title,
       image,
     }
+
+
 
     //build form data
     const formData = new FormData()
@@ -68,9 +76,8 @@ const Profile = () => {
 
     setTitle('')
 
-    setTimeout(() => {
-      dispatch(resetMessage())
-    }, 2000)
+    
+    resetComponentMessage()
   }
 
   if (loading) {
