@@ -29,8 +29,8 @@ const Profile = () => {
     error: errorPhoto,
   } = useSelector((state) => state.photo)
 
-  const [title, setTitle] = useState('')
-  const [image, setImage] = useState('')
+  const [title, setTitle] = useState()
+  const [image, setImage] = useState()
 
   //New form and edit form refs
   const newPhotoForm = useRef()
@@ -48,13 +48,8 @@ const Profile = () => {
   }
 
   //reset component message
- function resetComponentMessage() {
-   setTimeout(() => {
-     dispatch(resetMessage())
-   }, 2000)
- }
 
- //Publish new photo
+  //Publish new photo
   const submitHandle = (e) => {
     e.preventDefault()
 
@@ -76,8 +71,9 @@ const Profile = () => {
 
     setTitle('')
 
-    
-    resetComponentMessage()
+    setTimeout(() => {
+      dispatch(resetMessage())
+    }, 2000)
   }
 
   if (loading) {
