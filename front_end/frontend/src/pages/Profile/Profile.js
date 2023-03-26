@@ -47,12 +47,14 @@ const Profile = () => {
     setImage(image)
   }
 
+  //reset component message
  function resetComponentMessage() {
    setTimeout(() => {
      dispatch(resetMessage())
    }, 2000)
  }
 
+ //Publish new photo
   const submitHandle = (e) => {
     e.preventDefault()
 
@@ -60,8 +62,6 @@ const Profile = () => {
       title,
       image,
     }
-
-
 
     //build form data
     const formData = new FormData()
