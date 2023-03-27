@@ -32,6 +32,13 @@ const Profile = () => {
   const [title, setTitle] = useState()
   const [image, setImage] = useState()
 
+  //functions
+  const resetComponentMessage = () => {
+    setTimeout(() => {
+      dispatch(resetMessage())
+    }, 2000)
+  }
+
   //New form and edit form refs
   const newPhotoForm = useRef()
   const editPhotoForm = useRef()
@@ -65,15 +72,13 @@ const Profile = () => {
       formData.append(key, photoData[key])
     )
 
-    formData.append('photo', photoFormData)
+    formData.append('photo', photoFormData) // photo is obj
 
     dispatch(publishPhoto(formData))
 
-    setTitle('')
-
-    setTimeout(() => {
-      dispatch(resetMessage())
-    }, 2000)
+    setTitle(' '
+    )
+    resetComponentMessage()
   }
 
   if (loading) {
@@ -97,10 +102,10 @@ const Profile = () => {
             <h3>Compartilhe algum momento seu: </h3>
             <form onSubmit={submitHandle}>
               <label>
-                <span>Titulo para foto:</span>
+                <span>Título para a foto:</span>
                 <input
                   type="text"
-                  placeholder="insira um titulo"
+                  placeholder="Insira um título"
                   onChange={(e) => setTitle(e.target.value)}
                   value={title || ''}
                 />
@@ -111,7 +116,7 @@ const Profile = () => {
               </label>
               {!loadingPhoto && <input type="submit" value="Postar" />}
               {loadingPhoto && (
-                <input type="submit" disabled value="Aguarde..." />
+                <input type="submit" value="Aguarde..." disabled />
               )}
             </form>
           </div>
@@ -122,5 +127,4 @@ const Profile = () => {
     </div>
   )
 }
-
 export default Profile
