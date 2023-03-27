@@ -18,6 +18,7 @@ export const publishPhoto = createAsyncThunk(
 
     const data = await photoService.publishPhoto(photo, token)
 
+    console.log(data.errors)
     //check error
     if (data.errors) {
       return thunkAPI.rejectWithValue(data.errors[0])

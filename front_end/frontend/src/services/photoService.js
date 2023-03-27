@@ -1,6 +1,6 @@
 import { api, requestConfig } from '../utils/config'
 
-//Publish an user photo
+// Publish an user's photo
 const publishPhoto = async (data, token) => {
   const config = requestConfig('POST', data, token, true)
 
@@ -14,6 +14,20 @@ const publishPhoto = async (data, token) => {
     console.log(error)
   }
 }
+
+// Get user photos
+
+// Get photo
+
+// Delete a photo
+
+// Update a photo
+
+// Like a photo
+
+// Add a comment to a photo
+
+// Get all photos
 
 const photoService = {
   publishPhoto,
