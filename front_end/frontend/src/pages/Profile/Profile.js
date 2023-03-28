@@ -13,7 +13,11 @@ import { useParams } from 'react-router-dom'
 
 //redux:
 import { getUserDetails } from '../../slices/userSlice'
-import { publishPhoto, resetMessage } from '../../slices/photoSlice'
+import {
+  publishPhoto,
+  resetMessage,
+  getUserphotos,
+} from '../../slices/photoSlice'
 
 const Profile = () => {
   const { id } = useParams()
@@ -29,15 +33,10 @@ const Profile = () => {
     error: errorPhoto,
   } = useSelector((state) => state.photo)
 
-  const [title, setTitle] = useState()
-  const [image, setImage] = useState()
+  const [title, setTitle] = useState('')
+  const [image, setImage] = useState('')
 
   //functions
-  const resetComponentMessage = () => {
-    setTimeout(() => {
-      dispatch(resetMessage())
-    }, 2000)
-  }
 
   //New form and edit form refs
   const newPhotoForm = useRef()
@@ -46,6 +45,7 @@ const Profile = () => {
   //Load user data:
   useEffect(() => {
     dispatch(getUserDetails(id))
+    dispatch(getUserphotos(id))
   }, [dispatch, id])
 
   const handleFile = (e) => {
@@ -76,9 +76,11 @@ const Profile = () => {
 
     dispatch(publishPhoto(formData))
 
-    setTitle(' '
-    )
-    resetComponentMessage()
+    setTitle(' ')
+
+    setTimeout(() => {
+      dispatch(resetMessage())
+    }, 2000)
   }
 
   if (loading) {
@@ -116,7 +118,7 @@ const Profile = () => {
               </label>
               {!loadingPhoto && <input type="submit" value="Postar" />}
               {loadingPhoto && (
-                <input type="submit" value="Aguarde..." disabled />
+                <input type="submit" disabled value="Aguarde..." />
               )}
             </form>
           </div>
