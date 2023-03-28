@@ -2,7 +2,9 @@ const User = require('../models/User')
 
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const mongoose = require('mongoose')
+const { default: mongoose } = require('mongoose')
+
+//const mongoose = require('mongoose')
 
 const jwtSecret = process.env.JWT_SECRET
 
@@ -16,7 +18,7 @@ const register = async (req, res) => {
   const user = await User.findOne({ email })
 
   // If user was created successfully, return the token
-  if (!user) {
+  if (user) {
     res.status(422).json({ errors: ['Por favor, utilize outro e-mail.'] })
     return
   }
