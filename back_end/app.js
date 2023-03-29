@@ -27,7 +27,7 @@ app.get('/', (req, res) => {
 })
 
 // routers
-const router = require('./routers/Router')
+const router = require('./routes/Router')
 app.use(router)
 
 app.listen(port, () => {
