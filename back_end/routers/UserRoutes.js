@@ -10,7 +10,7 @@ const {
   getUserById,
 } = require('../controllers/UserController')
 
-//Middlewares
+// Middlewares
 const validate = require('../middlewares/handleValidaition')
 const {
   userCreateValidation,
